@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="bg-base-200 mx-5">
+  <div class="grid grid-cols-4">
+    <div class="col-span-2">
+      <p>{{shopping.code}}</p>
+      <p>{{shopping.name}}</p>
+      <p>{{shopping.date}}</p>
+      <p>{{shopping.status}}</p>
+
+      <div class="overflow-hidden border border-gray-200 dark:border-gray-700 md:rounded-lg">
+        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+          <thead class="bg-gray-50 dark:bg-gray-800">
+            <tr>
+              <th scope="col"
+                class="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                No.
+              </th>
+
+              <th scope="col"
+                class="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                Kode Barang
+              </th>
+
+              <th scope="col"
+                class="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                Nama Barang
+              </th>
+
+              <th scope="col"
+                class="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                Jumlah
+              </th>
+
+              <th scope="col"
+                class="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                Harga
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-900">
+            {% for item in shopping_goods %}
+            <tr>
+              <td class="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
+                <div class="inline-flex items-center gap-x-3">
+                  <span>{{ forloop.counter }}</span>
+                </div>
+              </td>
+              <td class="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
+                <div class="inline-flex items-center gap-x-3">
+                  <span>{{ item.good.code }}</span>
+                </div>
+              </td>
+              <td class="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
+                <div class="inline-flex items-center gap-x-3">
+                  <span>{{ item.good.name }}</span>
+                </div>
+              </td>
+              <td class="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
+                <div class="inline-flex items-center gap-x-3">
+                  <span>{{ item.amount }}</span>
+                </div>
+              </td>
+              <td class="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
+                <div class="inline-flex items-center gap-x-3">
+                  <span>{{ item.price }}</span>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  let goodValue = ''
+  let goodPrice = ''
+  let goodUnit = ''
+  const goodPriceElement = document.getElementById('price')
+  const goodUnitElement = document.getElementById('good_unit')
+
+  const chooseGood = (e) => {
+    if (e.value != '') {
+      const selectedOption = e.options[e.selectedIndex]
+
+      // goodPriceElement.value = selectedOption.getAttribute('data-good-price')
+      goodUnitElement.value = selectedOption.getAttribute('data-good-unit')
+    } else {
+      goodPriceElement.value = ''
+      goodUnitElement.value = ''
+    }
+  }
+</script>
+{% endblock %}

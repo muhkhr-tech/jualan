@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="bg-base-200 mx-5">
+  <div class="grid grid-cols-3 gap-x-5">
+    <div class="col-span-2">
+      <p>{{food.code}}</p>
+      <p>{{food.name}}</p>
+      <p>{{food.date}}</p>
+
+      <div class="overflow-hidden border border-gray-200 dark:border-gray-700 md:rounded-lg">
+        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+          <thead class="bg-gray-50 dark:bg-gray-800">
+            <tr>
+              <th scope="col"
+                class="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                No.
+              </th>
+
+              <th scope="col"
+                class="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                Kode Barang
+              </th>
+
+              <th scope="col"
+                class="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                Nama Barang
+              </th>
+
+              <th scope="col"
+                class="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                Tambahkan ke penjualan
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-900">
+            {% for item in foods %}
+            <form action="" method="POST">
+              {% csrf_token %}
+              <input type="text" name="food_id" value="{{item.id}}" hidden>
+              <tr>
+                <td class="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
+                  <div class="inline-flex items-center gap-x-3">
+                    <span>{{ forloop.counter }}</span>
+                  </div>
+                </td>
+                <td class="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
+                  <div class="inline-flex items-center gap-x-3">
+                    <span>{{ item.code }}</span>
+                  </div>
+                </td>
+                <td class="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
+                  <div class="inline-flex items-center gap-x-3">
+                    <span>{{ item.name }}</span>
+                  </div>
+                </td>
+                <td class="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
+                  <div class="inline-flex items-center gap-x-3">
+
+                    <button type="submit"
+                      class="hover:shadow-form rounded-md bg-[#6A64F1] py-3 px-8 text-base font-semibold text-white outline-none">
+                      Tambah
+                    </button>
+
+                  </div>
+                </td>
+            </form>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  const params = new URLSearchParams(location.search)
+  let foodValue = ''
+  let foodPrice = ''
+  let foodUnit = ''
+  const foodStockElement = document.getElementById('ingredient_stock')
+  const foodUnitElement = document.getElementById('ingredient_unit')
+
+  const chooseFood = (e) => {
+    params.set('food_id', e.value)
+
+    location.search = params
+    if (e.value != '') {
+      const selectedOption = e.options[e.selectedIndex]
+
+      foodStockElement.value = selectedOption.getAttribute('data-food-stock')
+      foodUnitElement.value = selectedOption.getAttribute('data-food-unit')
+    } else {
+      foodStockElement.value = ''
+      foodUnitElement.value = ''
+    }
+  }
+</script>
+{% endblock %}

@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="bg-base-200 mx-5">
+  <div class="grid grid-cols-4">
+    <div class="col-span-2">
+      <p>{{shopping.code}}</p>
+      <p>{{shopping.name}}</p>
+      <p>{{shopping.date}}</p>
+
+      <div class="overflow-hidden border border-gray-200 dark:border-gray-700 md:rounded-lg">
+        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+          <thead class="bg-gray-50 dark:bg-gray-800">
+            <tr>
+              <th scope="col"
+                class="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                No.
+              </th>
+
+              <th scope="col"
+                class="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                Kode Barang
+              </th>
+
+              <th scope="col"
+                class="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                Nama Barang
+              </th>
+
+              <th scope="col"
+                class="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                Jumlah
+              </th>
+              
+              <th scope="col"
+                class="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                Hapus
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-900">
+            {% for item in ingredients %}
+            <tr>
+              <td class="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
+                <div class="inline-flex items-center gap-x-3">
+                  <span>{{ forloop.counter }}</span>
+                </div>
+              </td>
+              <td class="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
+                <div class="inline-flex items-center gap-x-3">
+                  <span>{{ item.good.code }}</span>
+                </div>
+              </td>
+              <td class="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
+                <div class="inline-flex items-center gap-x-3">
+                  <span>{{ item.good.name }}</span>
+                </div>
+              </td>
+              <td class="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
+                <div class="inline-flex items-center gap-x-3">
+                  <span>{{ item.amount }}</span>
+                </div>
+              </td>
+              <td class="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
+                <div class="inline-flex items-center gap-x-3">
+                  <form action="{% url 'food_sales:food.remove_ingredient' food.id %}" method="post">
+                    {% csrf_token %}
+                    <input type="text" value="{{item.good.id}}" name="good" hidden>
+                    <button type="submit">x</button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="col-start-4 w-full">
+      <form action="" method="POST">
+        {% csrf_token %}
+        <input type="text" name="shopping_id" value="{{shopping.id}}" hidden>
+        <div class="mb-5">
+          <select name="good" id="good" onchange="chooseGood(this)" class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md" required>
+            <option value="" disabled selected>Pilih bahan makanan</option>
+            {% for good in goods %}
+            <option data-good-unit="{{good.unit}}" data-good-stock="{{good.stock}}" value="{{good.id}}">{{ good.code }} - {{good.name}}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="mb-5">
+          <label for="ingredient_unit" class="mb-3 block text-base font-medium text-[#07074D]">
+            Satuan
+          </label>
+          <input type="text" name="ingredient_unit" id="ingredient_unit"
+            class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md" readonly />
+        </div>
+
+        <div class="mb-5">
+          <label for="ingredient_stock" class="mb-3 block text-base font-medium text-[#07074D]">
+            Sisa stok
+          </label>
+          <input type="text" name="ingredient_stock" id="ingredient_stock"
+            class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md" readonly />
+        </div>
+
+        <div class="mb-5">
+          <label for="ingredient_amount" class="mb-3 block text-base font-medium text-[#07074D]">
+            Jumlah yang dibutuhkan
+          </label>
+          <input type="number" name="ingredient_amount" id="ingredient_amount"
+            class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md" required/>
+        </div>
+
+        <div>
+          <button type="submit"
+            class="hover:shadow-form rounded-md bg-[#6A64F1] py-3 px-8 text-base font-semibold text-white outline-none">
+            Tambah
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  let goodValue = ''
+  let goodPrice = ''
+  let goodUnit = ''
+  const goodStockElement = document.getElementById('ingredient_stock')
+  const goodUnitElement = document.getElementById('ingredient_unit')
+
+  const chooseGood = (e) => {
+    if (e.value != '') {
+      const selectedOption = e.options[e.selectedIndex]
+
+      goodStockElement.value = selectedOption.getAttribute('data-good-stock')
+      goodUnitElement.value = selectedOption.getAttribute('data-good-unit')
+    } else {
+      goodStockElement.value = ''
+      goodUnitElement.value = ''
+    }
+  }
+</script>
+{% endblock %}
