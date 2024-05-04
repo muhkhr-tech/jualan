@@ -66,4 +66,5 @@ class MasterMaterial(models.Model):
     type = models.CharField(max_length=50)
     store_name = models.CharField(max_length=100)
     date = models.DateField()
+    created_at = models.DateField()
     status = models.BooleanField(default=True)

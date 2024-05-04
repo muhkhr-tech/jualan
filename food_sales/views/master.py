@@ -22,7 +22,8 @@ def insert_materials(request):
         new_good.amount = request.POST['good_amount']
         new_good.type = request.POST['good_type']
         new_good.store_name = request.POST['good_store_name']
-        new_good.date = datetime.now()
+        new_good.date = request.POST['good_shop_date']
+        new_good.created_at = datetime.now()
         new_good.save()
 
         return redirect('food_sales:master.material')
